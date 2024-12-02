@@ -92,3 +92,41 @@ Logs out the authenticated user by invalidating their token.
 ### Example Response
 
 - `message` (string): Confirmation message, e.g., "Logged Out".
+
+## `/captains/register` Endpoint
+
+### Description
+
+Registers a new captain by accepting their first name, last name, email, password, and vehicle details.
+
+### HTTP Method
+
+`POST`
+
+### Request Body
+
+- `fullname` (object):
+    - `firstname` (string, required): First name of the captain (minimum 3 characters).
+    - `lastname` (string, optional): Last name of the captain.
+- `email` (string, required): Valid email address.
+- `password` (string, required): Password (minimum 6 characters).
+- `vehicle` (object):
+    - `color` (string, required): Color of the vehicle (minimum 3 characters).
+    - `plate` (string, required): License plate of the vehicle (minimum 3 characters).
+    - `capacity` (number, required): Capacity of the vehicle (minimum 1).
+    - `vehicleType` (string, required): Type of the vehicle (must be one of 'car', 'auto', 'motorcycle').
+
+### Example Response
+
+- `captain` (object):
+  - `fullname` (object):
+     - `firstname` (string): First name of the captain.
+     - `lastname` (string): Last name of the captain.
+  - `email` (string): Valid email address.
+  - `password` (string, required): Password (minimum 6 characters).
+  - `vehicle` (object):
+    - `color` (string): Color of the vehicle.
+    - `plate` (string): License plate of the vehicle.
+    - `capacity` (number): Capacity of the vehicle.
+    - `vehicleType` (string): Type of the vehicle.
+- `token` (string): JWT Token
