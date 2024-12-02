@@ -52,3 +52,43 @@ Authenticates a user using their email and password.
   - `email` (string): Valid email address.
   - `password` (string): Password (minimum 6 characters).
 - `token` (String): JWT Token
+
+## `/users/profile` Endpoint
+
+### Description
+
+Retrieves the profile information of the authenticated user.
+
+### HTTP Method
+
+`GET`
+
+### Headers
+
+- `Authorization`: Bearer token obtained upon login.
+
+### Example Response
+
+- `user` (object):
+  - `fullname` (object):
+     - `fullname.firstname` (string): First name of the user.
+     - `fullname.lastname` (string): Last name of the user.
+  - `email` (string): Valid email address.
+
+## `/users/logout` Endpoint
+
+### Description
+
+Logs out the authenticated user by invalidating their token.
+
+### HTTP Method
+
+`GET`
+
+### Headers
+
+- `Authorization`: Bearer token obtained upon login.
+
+### Example Response
+
+- `message` (string): Confirmation message, e.g., "Logged Out".
