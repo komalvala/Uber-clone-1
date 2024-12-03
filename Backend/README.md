@@ -130,3 +130,77 @@ Registers a new captain by accepting their first name, last name, email, passwor
     - `capacity` (number): Capacity of the vehicle.
     - `vehicleType` (string): Type of the vehicle.
 - `token` (string): JWT Token
+
+## `/captains/login` Endpoint
+
+### Description
+
+Authenticates a captain using their email and password.
+
+### HTTP Method
+
+`POST`
+
+### Request Body
+
+- `email` (string, required): Valid email address.
+- `password` (string, required): Password (minimum 6 characters).
+
+### Example Response
+
+- `captain` (object):
+  - `fullname` (object):
+     - `firstname` (string): First name of the captain.
+     - `lastname` (string): Last name of the captain.
+  - `email` (string): Valid email address.
+  - `vehicle` (object):
+    - `color` (string): Color of the vehicle.
+    - `plate` (string): License plate of the vehicle.
+    - `capacity` (number): Capacity of the vehicle.
+    - `vehicleType` (string): Type of the vehicle.
+- `token` (string): JWT Token
+
+## `/captains/profile` Endpoint
+
+### Description
+
+Retrieves the profile information of the authenticated captain.
+
+### HTTP Method
+
+`GET`
+
+### Headers
+
+- `Authorization`: Bearer token obtained upon login.
+
+### Example Response
+
+- `captain` (object):
+  - `fullname` (object):
+     - `firstname` (string): First name of the captain.
+     - `lastname` (string): Last name of the captain.
+  - `email` (string): Valid email address.
+  - `vehicle` (object):
+    - `color` (string): Color of the vehicle.
+    - `plate` (string): License plate of the vehicle.
+    - `capacity` (number): Capacity of the vehicle.
+    - `vehicleType` (string): Type of the vehicle.
+
+## `/captains/logout` Endpoint
+
+### Description
+
+Logs out the authenticated captain by invalidating their token.
+
+### HTTP Method
+
+`GET`
+
+### Headers
+
+- `Authorization`: Bearer token obtained upon login.
+
+### Example Response
+
+- `message` (string): Confirmation message, e.g., "Logout successfully".
