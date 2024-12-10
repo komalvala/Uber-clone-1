@@ -3,6 +3,9 @@ import map from '../assets/map.gif'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import 'remixicon/fonts/remixicon.css'
+import LocationSearchPanel from '../Components/LocationSearchPanel'
+import Vehiclepanel from '../Components/Vehiclepanel'
+import ConfirmRide from '../Components/ConfirmRide'
 
 const Home = () => {
 
@@ -11,6 +14,11 @@ const Home = () => {
   const [panelOpen, setPanelOpen] = useState(false);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const [vehiclePanel, setVehiclePanel] = useState(false);
+  const [confirmRidePanel, setConfirmRidePanel] = useState(false);
+  const vehiclePanelRef = useRef(null);
+  const confirmRidePanelRef = useRef(null);
+
 
   const submitHandler = () => {
     e.preventDefault()
@@ -20,30 +28,56 @@ const Home = () => {
     if (panelOpen) {
       gsap.to(panelRef.current, {
         height: '70%',
-        opacity:1
+        padding: 26,
+        opacity: 1
       })
       gsap.to(panelCloseRef.current, {
-        opacity:1
+        opacity: 1
       })
     } else {
       gsap.to(panelRef.current, {
         height: '0%',
-        opacity:0
+        padding: 0,
+        opacity: 0
       })
       gsap.to(panelCloseRef.current, {
-        opacity:0
+        opacity: 0
       })
     }
   }, [panelOpen])
 
+  useGSAP(function () {
+    if (vehiclePanel) {
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translateY(0%)'
+      })
+    } else {
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+  }, [vehiclePanel])
+
+  useGSAP(function () {
+    if (confirmRidePanel) {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: 'translateY(0%)'
+      })
+    } else {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+  }, [confirmRidePanel])
+
   return (
-    <div className='h-screen relative'>
+    <div className='h-screen relative overflow-hidden'>
       <img className='w-20 absolute left-5 top-5' src="https://logospng.org/download/uber/logo-uber-4096.png" alt="" />
       <div className='h-screen w-screen'>
         <img className='h-full w-full object-cover' src={map} alt="" />
       </div>
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
-        <div className='h-[30%] p-6 bg-white relative'>
+        <div className='h-[30%] rounded-t-3xl p-6 bg-white relative'>
           <h5
             ref={panelCloseRef}
             onClick={() => {
@@ -81,9 +115,15 @@ const Home = () => {
               placeholder='Enter your destination' />
           </form>
         </div>
-        <div ref={panelRef} className='h-0 opacity-0 bg-red-500 '>
-
+        <div ref={panelRef} className='h-0 bg-white '>
+          <LocationSearchPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanel} />
         </div>
+      </div>
+      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-10 pt-12'>
+        <Vehiclepanel setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
+      </div>
+      <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
+              <ConfirmRide />
       </div>
     </div>
   )
