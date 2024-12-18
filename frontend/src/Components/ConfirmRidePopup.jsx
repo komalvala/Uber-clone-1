@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
 const ConfirmRidePopup = (props) => {
+
+    const [otp, setOtp] = useState('');
+
+    const sumbitHanlder = (e) => {
+        e.preventDefault()
+    }
+
     return (
         <div>
             <h5
@@ -44,12 +51,21 @@ const ConfirmRidePopup = (props) => {
                         </div>
                     </div>
                 </div>
-                <Link to='/captain-riding' className='w-full bg-green-600 mt-5 flex justify-center text-white font-semibold p-3 rounded-lg'>Confirm</Link>
-                <button onClick={() => {
-                    props.setConfirmRidePopupPanel(false);
-                    props.setRidePopupPanel(false);
-                }}
-                    className='w-full mt-1 text-white bg-red-600 font-semibold p-3 rounded-lg'>Cancle</button>
+                <div className='mt-6 w-full'>
+                    <form onSubmit={(e) => {
+                        sumbitHanlder(e)
+                    }}>
+                        <input value={otp} onChange={(e) => {
+                            setOtp(e.target.value)
+                        }} type="text" placeholder='Enter OTP' className='bg-[#eee] placeholder-gray-600 px-6 py-4 font-mono text-lg rounded-lg w-full mt-3' />
+                        <Link to='/captain-riding' className='w-full text-lg bg-green-600 mt-5 flex justify-center text-white font-semibold p-3 rounded-lg'>Confirm</Link>
+                        <button onClick={() => {
+                            props.setConfirmRidePopupPanel(false);
+                            props.setRidePopupPanel(false);
+                        }}
+                            className='w-full mt-2 text-white text-lg bg-red-600 font-semibold p-3 rounded-lg'>Cancle</button>
+                    </form>
+                </div>
             </div>
         </div>
     )
