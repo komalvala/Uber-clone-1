@@ -1,15 +1,11 @@
 const axios = require('axios');
 
 module.exports.getAddressCoordinate = async (address) => {
-    try {
-        const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
-            params: {
-                address: address,
-                key: apiKey
-            }
-        });
 
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    const url = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`);
+    try {
+        const response = await axios.get(url);
         if (response.data.status === 'OK') {
             const location = response.data.results[0].geometry.location;
             return {
@@ -32,7 +28,7 @@ module.exports.getDistanceTime = async (origin, destination) => {
 
     const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&key=${apiKey}`;
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
@@ -40,11 +36,7 @@ module.exports.getDistanceTime = async (origin, destination) => {
             if (response.data.rows[0].elements[0].status === 'ZERO_RESULTS') {
                 throw new Error('No routes found');
             }
-            const data = response.data.rows[0].elements[0];
-            return {
-                distance: data.distance.text,
-                duration: data.duration.text
-            };
+            return response.data.rows[0].elements[0];
         } else {
             throw new Error('Unable to fetch distance and time');
         }
@@ -61,7 +53,7 @@ module.exports.getSuggestions = async (input) => {
     }
 
     const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${apiKey}`;
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
