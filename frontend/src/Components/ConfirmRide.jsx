@@ -45,8 +45,6 @@ const ConfirmRide = (props) => {
                 }} className='w-full bg-green-600 mt-5 text-white font-semibold p-2 rounded-lg'>Confirm</button>
 
             </div>
-
-
         </div>
     )
 }

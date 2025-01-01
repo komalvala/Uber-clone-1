@@ -46,7 +46,14 @@ const Home = () => {
       setPickupSuggestions(response.data)
     }
     catch (error) {
-      console.error('Error fetching pickup suggestions:', error);
+      if (error.response) {
+        console.error('Error fetching pickup suggestions:', error.response.data);
+      } else if (error.request) {
+        console.error('Error fetching pickup suggestions: No response received');
+      } else {
+        console.error('Error fetching pickup suggestions:', error.message);
+      }
+      console.error('Error details:', error); // Log the error details
     }
   }
 
@@ -62,7 +69,14 @@ const Home = () => {
       setDestinationSuggestions(response.data)
     }
     catch (error) {
-      console.error('Error fetching destination suggestions:', error);
+      if (error.response) {
+        console.error('Error fetching destination suggestions:', error.response.data);
+      } else if (error.request) {
+        console.error('Error fetching destination suggestions: No response received');
+      } else {
+        console.error('Error fetching destination suggestions:', error.message);
+      }
+      console.error('Error details:', error); // Log the error details
     }
   }
 
@@ -76,7 +90,7 @@ const Home = () => {
       gsap.to(panelRef.current, {
         height: '70%',
         padding: 26,
-        opacity: 1
+        // opacity: 1
       })
       gsap.to(panelCloseRef.current, {
         opacity: 1
@@ -85,7 +99,7 @@ const Home = () => {
       gsap.to(panelRef.current, {
         height: '0%',
         padding: 0,
-        opacity: 0
+        // opacity: 0
       })
       gsap.to(panelCloseRef.current, {
         opacity: 0
@@ -144,7 +158,6 @@ const Home = () => {
   async function findTrip() {
     setVehiclePanel(true)
     setPanelOpen(false)
-    setVehicleFound(false)
 
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
       params: {
@@ -231,18 +244,44 @@ const Home = () => {
             activeField={activeField} />
         </div>
       </div>
-      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-10 pt-12'>
-        <Vehiclepanel setVehicleFound={setVehicleFound} selectVehicle={setVehicleType} fare={fare} setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
+      <div ref={vehiclePanelRef} className='fixed w-full z-50 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-10 pt-12'>
+        <Vehiclepanel
+          selectVehicle={setVehicleType}
+          fare={fare}
+          setConfirmRidePanel={setConfirmRidePanel}
+          setVehiclePanel={setVehiclePanel} />
       </div>
-      <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
-        <ConfirmRide pickup={pickup} destination={destination} fare={fare} vehicleType={vehicleType} createRide={createRide} setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
-      </div>
-      <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
-        <LookingForDriver pickup={pickup} destination={destination} fare={fare} vehicleType={vehicleType} createRide={createRide} setVehicleFound={setVehicleFound} />
-      </div>
-      <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0  rounded-t-2xl bg-white px-3 py-6 pt-12'>
-        <WaitingForDriver waitingForDriver={waitingForDriver} />
-      </div>
+      { confirmRidePanel && pickup && destination && (
+        <div ref={confirmRidePanelRef} className='fixed w-full z-40 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
+          <ConfirmRide
+            createRide={createRide}
+            pickup={pickup}
+            destination={destination}
+            fare={fare}
+            vehicleType={vehicleType}
+            setConfirmRidePanel={setConfirmRidePanel}
+            setVehicleFound={setVehicleFound} />
+        </div>
+      )}
+      { vehicleFound && (
+        <div ref={vehicleFoundRef} className='fixed w-full z-30 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
+          <LookingForDriver
+            createRide={createRide}
+            pickup={pickup}
+            destination={destination}
+            fare={fare}
+            vehicleType={vehicleType}
+            setVehicleFound={setVehicleFound} />
+        </div>
+      )}
+      { waitingForDriver && (
+        <div ref={waitingForDriverRef} className='fixed w-full z-20 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
+          <WaitingForDriver
+            setVehicleFound={setVehicleFound}
+            setWaitingForDriver={setWaitingForDriver}
+            waitingForDriver={waitingForDriver} />
+        </div>
+      )}
     </div>
   )
 }
