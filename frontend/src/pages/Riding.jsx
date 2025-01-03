@@ -6,7 +6,7 @@ const Riding = () => {
     const location = useLocation();
     const { ride } = location.state || {};
 
-    console.log('Ride object:', ride); // Debugging statement
+    console.log('Ride object:', ride);
 
     return (
         <div className='h-screen overflow-hidden flex flex-col'>

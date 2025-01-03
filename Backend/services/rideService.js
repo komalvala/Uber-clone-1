@@ -49,24 +49,27 @@ function getOtp(num) {
     return generateOtp(num);
 }
 
-module.exports.createRide = async (
-    { user, pickup, destination, vehicleType }
-) => {
+module.exports.createRide = async ({ user, pickup, destination, vehicleType }) => {
     if (!user || !pickup || !destination || !vehicleType) {
         throw new Error('All fields are required');
     }
     const fare = await getFare(pickup, destination);
+    
+    // Get distance and convert to number
+    const distanceTime = await mapService.getDistanceTime(pickup, destination);
+    const distanceInKm = Number((distanceTime.distance.value / 1000).toFixed(2));
+    console.log('Distance being saved:', distanceInKm);
 
-    const ride = rideModel.create({
+    const ride = await rideModel.create({
         user,
         pickup,
         destination,
         otp: getOtp(6),
         fare: fare[vehicleType],
+        distance: distanceInKm
     });
 
     return ride;
-
 }
 
 module.exports.confirmRide = async ({ rideId,captain }) => {
