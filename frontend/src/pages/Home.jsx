@@ -1,14 +1,19 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import map from '../assets/map.gif'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import axios from 'axios'
 import 'remixicon/fonts/remixicon.css'
 import LocationSearchPanel from '../Components/LocationSearchPanel'
 import Vehiclepanel from '../Components/Vehiclepanel'
 import ConfirmRide from '../Components/ConfirmRide'
 import LookingForDriver from '../Components/LookingForDriver'
 import WaitingForDriver from '../Components/WaitingForDriver'
-import axios from 'axios'
+import { SocketContext } from '../context/SocketContext'
+import { useContext } from 'react'
+import { UserDataContext } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
+
 
 const Home = () => {
 
@@ -25,6 +30,9 @@ const Home = () => {
   const [activeField, setActiveField] = useState(null);
   const [fare, setFare] = useState(null);
   const [vehicleType, setVehicleType] = useState(null);
+  const [ride, setRide] = useState(null);
+
+  const navigate = useNavigate();
 
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
@@ -33,6 +41,25 @@ const Home = () => {
   const vehicleFoundRef = useRef(null);
   const waitingForDriverRef = useRef(null);
 
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDataContext);
+
+  useEffect(() => {
+    console.log(user);
+    socket.emit('join', { userType: 'user', userId: user._id });
+  }, [user])
+
+  socket.on('ride-confirmed', ride => {
+
+    setVehicleFound(false);
+    setWaitingForDriver(true);
+    setRide(ride);
+  })
+
+  socket.on('ride-started', ride => {
+    setWaitingForDriver(false);
+    navigate('/riding', { state: { ride } });
+  })
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value)
@@ -251,7 +278,7 @@ const Home = () => {
           setConfirmRidePanel={setConfirmRidePanel}
           setVehiclePanel={setVehiclePanel} />
       </div>
-      { confirmRidePanel && pickup && destination && (
+      {confirmRidePanel && pickup && destination && (
         <div ref={confirmRidePanelRef} className='fixed w-full z-40 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
           <ConfirmRide
             createRide={createRide}
@@ -259,11 +286,12 @@ const Home = () => {
             destination={destination}
             fare={fare}
             vehicleType={vehicleType}
+            // passenger={passenger}
             setConfirmRidePanel={setConfirmRidePanel}
             setVehicleFound={setVehicleFound} />
         </div>
       )}
-      { vehicleFound && (
+      {vehicleFound && (
         <div ref={vehicleFoundRef} className='fixed w-full z-30 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
           <LookingForDriver
             createRide={createRide}
@@ -274,9 +302,10 @@ const Home = () => {
             setVehicleFound={setVehicleFound} />
         </div>
       )}
-      { waitingForDriver && (
+      {waitingForDriver && (
         <div ref={waitingForDriverRef} className='fixed w-full z-20 bottom-0 translate-y-full rounded-t-2xl bg-white px-3 py-6 pt-12'>
           <WaitingForDriver
+            ride={ride}
             setVehicleFound={setVehicleFound}
             setWaitingForDriver={setWaitingForDriver}
             waitingForDriver={waitingForDriver} />
