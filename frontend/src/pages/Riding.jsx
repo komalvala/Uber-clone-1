@@ -1,12 +1,19 @@
 import React from 'react'
 import map from '../assets/map.gif'
 import { Link, useLocation } from 'react-router-dom'
+import { useEffect, useContext } from 'react'
+import { SocketContext } from '../context/SocketContext'
+import { useNavigate } from 'react-router-dom'
 
 const Riding = () => {
     const location = useLocation();
     const { ride } = location.state || {};
+    const { socket } = useContext(SocketContext);
+    const navigate = useNavigate();
 
-    console.log('Ride object:', ride);
+    socket.on('ride-ended', () => {
+        navigate('/home');
+    })
 
     return (
         <div className='h-screen overflow-hidden flex flex-col'>
