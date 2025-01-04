@@ -11,20 +11,35 @@ const ConfirmRidePopup = (props) => {
     const sumbitHanlder = async (e) => {
         e.preventDefault();
 
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
-            params: {
-                rideId: props.ride._id,
-                otp: otp,
-            },
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+                params: {
+                    rideId: props.ride._id,
+                    otp: otp,
+                },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
 
-        if (response.status === 200) {
-            props.setConfirmRidePopupPanel(false);
-            props.setRidePopupPanel(false);
-            navigate('/captain-riding', { state: { ride: props.ride } });
+            if (response.status === 200) {
+                props.setConfirmRidePopupPanel(false);
+                props.setRidePopupPanel(false);
+                
+                // Ensure distance is properly passed
+                const rideWithDistance = {
+                    ...props.ride,
+                    distance: props.ride.distance || '2.2' // Use existing distance or default
+                };
+                
+                navigate('/captain-riding', { 
+                    state: { 
+                        ride: rideWithDistance
+                    } 
+                });
+            }
+        } catch (error) {
+            console.error('Error starting ride:', error);
         }
     }
 
@@ -43,7 +58,7 @@ const ConfirmRidePopup = (props) => {
                     <img className='h-16 w-16 rounded-full object-cover' src="https://th.bing.com/th/id/R.a974526b0d8e713d6d10c6dbc35a5c91?rik=PxQRbin%2fOhnx2Q&riu=http%3a%2f%2fbr.web.img2.acsta.net%2fpictures%2f18%2f06%2f29%2f00%2f35%2f0101925.jpg&ehk=CSN0w13UxlvwbfQVwIRgLcU1NDeetirwL0F0KpsbOI0%3d&risl=&pid=ImgRaw&r=0" alt="" />
                     <h2 className='text-xl font-semibold capitalize'>{props.ride?.user.fullname.firstname}</h2>
                 </div>
-                <h5 className='text-lg font-semibold'>2.2 Km</h5>
+                <h5 className='text-lg font-semibold'>{props.ride?.distance || '2.2'} Km</h5>
             </div>
 
             <div className='flex gap-2 flex-col justify-between items-center'>

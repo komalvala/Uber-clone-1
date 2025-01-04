@@ -4,6 +4,7 @@ import map from '../assets/map.gif'
 import FinishRide from '../Components/FinishRide'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import LiveTracking from '../Components/LiveTracking'
 
 
 const CaptainRiding = () => {
@@ -12,12 +13,11 @@ const CaptainRiding = () => {
     const finishRidePanelRef = useRef(null);
     const location = useLocation();
     const rideData = location.state?.ride;
-
-    console.log('Full ride data:', rideData);
+    console.log('Ride data received:', rideData);
 
     const formattedDistance = rideData?.distance ? 
-        `${parseFloat(rideData.distance).toFixed(1)} Km Away` : 
-        'Calculating distance...';
+        parseFloat(rideData.distance).toFixed(1) : 
+        '2.2'; // Default distance if not available
 
     useGSAP(function () {
         if (finishRidePanel) {
@@ -41,7 +41,7 @@ const CaptainRiding = () => {
                 </Link>
             </div>
             <div className='h-4/5'>
-                <img className='h-full w-full object-cover' src={map} alt="" />
+                <LiveTracking/>
             </div>
             <div className='h-1/5 p-5 flex items-center relative rounded-2xl justify-between bg-yellow-400 pt-10'
                 onClick={() => {
@@ -52,7 +52,7 @@ const CaptainRiding = () => {
                 }}
                     className='w-[93%] p-1 text-center absolute top-0'>
                     <i className="text-2xl text-gray-700 ri-arrow-up-wide-line"></i></h5>
-                <h4 className='text-xl font-semibold'>{formattedDistance}</h4>
+                <h4 className='text-xl font-semibold'>{formattedDistance} km away</h4>
                 <button className=' bg-green-600  text-white font-semibold p-3 px-10  rounded-lg'>Complete Ride</button>
             </div>
             <div ref={finishRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full  rounded-t-2xl bg-white px-3 py-10 pt-12'>

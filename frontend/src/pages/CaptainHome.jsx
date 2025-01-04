@@ -10,6 +10,7 @@ import ConfirmRidePopup from '../Components/ConfirmRidePopup'
 import { useEffect, useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
 import { CaptainDataContext } from '../context/CaptainContext'
+import LiveTracking from '../Components/LiveTracking'
 
 
 
@@ -107,7 +108,7 @@ const CaptainHome = () => {
         </Link>
       </div>
       <div className='h-3/5'>
-        <img className='h-full w-full object-cover' src={map} alt="" />
+        <LiveTracking/>
       </div>
       <div className='h-2/5 mt-10 p-6'>
         <CaptainDetails />

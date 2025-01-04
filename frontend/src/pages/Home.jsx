@@ -13,6 +13,7 @@ import { SocketContext } from '../context/SocketContext'
 import { useContext } from 'react'
 import { UserDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
+import LiveTracking from '../Components/LiveTracking'
 
 
 const Home = () => {
@@ -31,6 +32,7 @@ const Home = () => {
   const [fare, setFare] = useState(null);
   const [vehicleType, setVehicleType] = useState(null);
   const [ride, setRide] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
 
   const navigate = useNavigate();
 
@@ -48,6 +50,20 @@ const Home = () => {
     console.log(user);
     socket.emit('join', { userType: 'user', userId: user._id });
   }, [user])
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => console.error(error)
+      );
+    }
+  }, []);
 
   socket.on('ride-confirmed', ride => {
 
@@ -217,7 +233,10 @@ const Home = () => {
     <div className='h-screen relative overflow-hidden'>
       <img className='w-20 absolute left-5 top-5' src="https://logospng.org/download/uber/logo-uber-4096.png" alt="" />
       <div className='h-screen w-screen'>
-        <img className='h-full w-full object-cover' src={map} alt="" />
+        <LiveTracking 
+          userLocation={userLocation}
+          destination={destination ? destination.location : null}
+        />
       </div>
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
         <div className='h-[30%] rounded-t-3xl p-6 bg-white relative'>

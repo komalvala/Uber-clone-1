@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
 import { useNavigate } from 'react-router-dom'
+import LiveTracking from '../Components/LiveTracking'
 
 const Riding = () => {
     const location = useLocation();
@@ -21,7 +22,7 @@ const Riding = () => {
                 <i className="text-lg font-semibold  ri-home-4-line"></i>
             </Link>
             <div className='flex-1'>
-                <img className='h-full w-full object-cover' src={map} alt="" />
+                <LiveTracking/>
             </div>
             <div className='flex-1 p-4 overflow-y-auto'>
                 <div className='flex items-center justify-between'>
