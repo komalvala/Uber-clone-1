@@ -17,7 +17,7 @@ const CaptainRiding = () => {
 
     const formattedDistance = rideData?.distance ? 
         parseFloat(rideData.distance).toFixed(1) : 
-        '2.2'; // Default distance if not available
+        '2.2';
 
     useGSAP(function () {
         if (finishRidePanel) {
@@ -31,7 +31,7 @@ const CaptainRiding = () => {
         }
     }, [finishRidePanel])
 
-    return (
+    return (    
         <div className='h-screen'>
 
             <div className='fixed p-6 top-0 items-center flex justify-between w-screen'>
