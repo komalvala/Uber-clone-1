@@ -1,7 +1,5 @@
 const captainModel = require('../models/captainModel.js');
 
-
-
 module.exports.createCaptain = async({
     firstname,lastname,email,password,color,plate,capacity,vehicleType
 }) => {

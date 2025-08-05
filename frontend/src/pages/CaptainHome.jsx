@@ -12,8 +12,6 @@ import { SocketContext } from '../context/SocketContext'
 import { CaptainDataContext } from '../context/CaptainContext'
 import LiveTracking from '../Components/LiveTracking'
 
-
-
 const CaptainHome = () => {
 
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
